@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+import com.bumptech.glide.Glide;
 import com.example.demophotoselector.R;
 
 import java.util.List;
@@ -20,8 +21,8 @@ import butterknife.ButterKnife;
 
 public class PhotoAdapter extends RecyclerView.Adapter<PhotoAdapter.PhotoViewHolder> {
     private Context mContext;
-    private List<Integer> list;
-    public PhotoAdapter(Context context,List<Integer> list){
+    private List<String> list;
+    public PhotoAdapter(Context context,List<String> list){
         this.mContext = context;
         this.list = list;
     }
@@ -33,7 +34,10 @@ public class PhotoAdapter extends RecyclerView.Adapter<PhotoAdapter.PhotoViewHol
 
     @Override
     public void onBindViewHolder(PhotoAdapter.PhotoViewHolder holder, int position) {
-        holder.iv_icon.setImageResource(list.get(position));
+        //显示图片
+        Glide.with(mContext).load(list.get(position))
+                .centerCrop()
+                .into(holder.iv_icon);
     }
 
     @Override
@@ -44,10 +48,12 @@ public class PhotoAdapter extends RecyclerView.Adapter<PhotoAdapter.PhotoViewHol
         return 0;
     }
     class PhotoViewHolder extends RecyclerView.ViewHolder{
+        View itemView;
         @BindView(R.id.iv_icon)
         ImageView iv_icon ;
         public PhotoViewHolder(final View itemView) {
             super(itemView);
+            this.itemView = itemView;
             ButterKnife.bind(this,itemView);
         }
     }

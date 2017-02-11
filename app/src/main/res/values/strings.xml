@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">DemoPhotoSelector</string>
+    <string name="no_storage">No external storage</string>
 </resources>
