@@ -1,6 +1,9 @@
 package com.example.demophotoselector.util;
 
+import android.animation.ObjectAnimator;
 import android.support.annotation.NonNull;
+import android.support.v4.view.ViewCompat;
+import android.view.View;
 
 import java.io.File;
 import java.io.FilenameFilter;
@@ -49,5 +52,21 @@ public class PhotoUtil {
             photoPaths.add(parentFilePath+"/"+name);
         }
         return photoPaths;
+    }
+
+    /*************属性动画部分*************/
+    /**
+     * 放大view
+     * @param view
+     */
+    public static void zoomIn(View view){
+        ViewCompat.animate(view).setDuration(200).scaleX(1.0f).scaleY(1.0f).start();
+    }
+
+    /**缩小view
+     * @param view
+     */
+    public static void zoomOut(View view){
+        ViewCompat.animate(view).setDuration(200).scaleX(0.9f).scaleY(0.9f).start();
     }
 }

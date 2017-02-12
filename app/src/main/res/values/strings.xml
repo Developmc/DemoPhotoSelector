@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">DemoPhotoSelector</string>
     <string name="no_storage">No external storage</string>
+    <string name="footer_behavior">com.example.demophotoselector.recycler.FooterBehavior</string>
 </resources>

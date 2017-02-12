@@ -7,6 +7,7 @@ import android.net.Uri;
 import android.os.Environment;
 import android.os.Handler;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
 
 import com.example.demophotoselector.constant.MessageConstant;
 import com.example.demophotoselector.model.PhotoFolder;
@@ -30,7 +31,7 @@ public class PhotoHelper {
     /**
      * 图片最多的文件夹
      */
-    private File mImgDir;
+    private File maxFile;
     /**
      * 图片最多的文件夹下的图片数量
      */
@@ -39,6 +40,10 @@ public class PhotoHelper {
      * 含有图片的文件夹的集合
      */
     private List<PhotoFolder> photoFolders;
+    /**
+     * 当前选中的文件夹
+     */
+    private PhotoFolder currentFolder = new PhotoFolder();
     private WeakReference<Activity> weakReference;
     private Handler mHandler;
 
@@ -94,18 +99,19 @@ public class PhotoHelper {
                 continue;
             }
             //获得父级目录的路径
-            String dirPath = parentFile.getAbsolutePath();
+            String folderPath = parentFile.getAbsolutePath();
             PhotoFolder photoFolder = null;
             //利用一个HashSet防止多次扫描同一个文件夹
-            if(mDirPaths.contains(dirPath)){
+            if(mDirPaths.contains(folderPath)){
                 continue;
             }
             else{
-                mDirPaths.add(dirPath);
+                mDirPaths.add(folderPath);
                 //初始化PhotoFolder
                 photoFolder = new PhotoFolder();
-                photoFolder.setDir(dirPath);
+                photoFolder.setDir(folderPath);
                 photoFolder.setFirstPhotoPath(firstPhotoPath);
+                photoFolder.setName(getNameFromPath(folderPath));
             }
             //忽略某些奇怪的图片
             if(parentFile.list()==null){
@@ -119,13 +125,24 @@ public class PhotoHelper {
             //获取图片数量最多的文件和该文件夹下的图片数量
             if(picSize>mPicsSize){
                 mPicsSize = picSize;
-                mImgDir = parentFile;
+                maxFile = parentFile;
+                //当前选中的文件夹
+                currentFolder = photoFolder;
             }
         }
         //扫描完成，关闭资源
         mCursor.close();
         //通知刷新
         mHandler.sendEmptyMessage(MessageConstant.MESSAGE_LOAD_FINISH);
+    }
+
+    /**根据目录获取文件名
+     * @param folderPath
+     * @return
+     */
+    private String getNameFromPath(@NonNull String folderPath){
+        String[] temp = folderPath.split("/");
+        return temp[temp.length-1] ;
     }
 
     public int getTotalCount() {
@@ -136,8 +153,12 @@ public class PhotoHelper {
         return mPicsSize;
     }
 
-    public File getmImgDir() {
-        return mImgDir;
+    public File getMaxFile() {
+        return maxFile;
+    }
+
+    public PhotoFolder getCurrentFolder() {
+        return currentFolder;
     }
 
     public List<PhotoFolder> getPhotoFolders() {

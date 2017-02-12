@@ -5,28 +5,40 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.StaggeredGridLayoutManager;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.demophotoselector.constant.MessageConstant;
+import com.example.demophotoselector.model.Photo;
+import com.example.demophotoselector.recycler.GridSpacingItemDecoration;
 import com.example.demophotoselector.recycler.PhotoAdapter;
-import com.example.demophotoselector.recycler.SpaceItemDecoration;
 import com.example.demophotoselector.util.PhotoUtil;
 
 import java.lang.ref.WeakReference;
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 public class PhotoPreviewActivity extends AppCompatActivity {
     @BindView(R.id.recyclerView)
     RecyclerView recyclerView;
+    @BindView(R.id.tv_title)
+    TextView tv_title;
+    @BindView(R.id.iv_back)
+    ImageView iv_back;
     private PhotoAdapter adapter;
     private PhotoThread photoThread;
     private PhotoHelper photoHelper;
     private PhotoHandler photoHandler;
+    private final int viewCount = 3;
+    //记录当前已经被选择的照片
+    private List<Photo> selectedPhotos = new ArrayList<>();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -36,20 +48,27 @@ public class PhotoPreviewActivity extends AppCompatActivity {
         start2LoadPhotos();
     }
     private void initRecyclerView(){
-        //设置布局,一行显示3张图片(高度自适应)
-        recyclerView.setLayoutManager(new StaggeredGridLayoutManager(3,StaggeredGridLayoutManager.VERTICAL));
-        //设置分割线
-        recyclerView.addItemDecoration(new SpaceItemDecoration(8,3));
+        //设置布局,一行显示3张图片(高度等于宽度)
+        final GridLayoutManager layoutManager = new GridLayoutManager(this,viewCount);
+        recyclerView.setHasFixedSize(true);
+        recyclerView.addItemDecoration(new GridSpacingItemDecoration(viewCount,5, false));
+        recyclerView.setLayoutManager(layoutManager);
     }
 
     /**显示图片
-     * @param showList
+     * @param photos
      */
-    private void showRecyclerView(@NonNull List<String> showList){
-        adapter = new PhotoAdapter(this,showList);
+    private void showRecyclerView(@NonNull List<Photo> photos){
+        adapter = new PhotoAdapter(this,photos,selectedPhotos);
         recyclerView.setAdapter(adapter);
     }
 
+    /**
+     * 设置title
+     */
+    private void setTitle(String title){
+        tv_title.setText(title);
+    }
     /**
      * 开启线程读取图片
      */
@@ -59,6 +78,10 @@ public class PhotoPreviewActivity extends AppCompatActivity {
         photoThread.start();
     }
 
+    @OnClick(R.id.iv_back)
+    void onBackPress(){
+        finish();
+    }
     /**
      * 声明一个静态的handler处理消息
      */
@@ -84,9 +107,18 @@ public class PhotoPreviewActivity extends AppCompatActivity {
     public void handleMessage(Message msg){
         switch (msg.what){
             case MessageConstant.MESSAGE_LOAD_FINISH:
-                List<String> showList = PhotoUtil.getPhotoPathsFromFolder(photoHelper.getmImgDir());
+                List<String> showList = PhotoUtil.getPhotoPathsFromFolder(photoHelper.getMaxFile());
+                List<Photo> photos = new ArrayList<>();
+                //将拿到的集合转为需要的对象集合
+                for (String path:showList){
+                    Photo photo = new Photo();
+                    photo.setPath(path);
+                    photos.add(photo);
+                }
                 //显示图片
-                showRecyclerView(showList);
+                showRecyclerView(photos);
+                //设置title
+                setTitle(photoHelper.getCurrentFolder().getName());
                 break;
             case MessageConstant.MESSAGE_NO_EXTERNAL_STORAGE:
                 Toast.makeText(PhotoPreviewActivity.this,getString(R.string.no_storage),Toast.LENGTH_SHORT).show();
