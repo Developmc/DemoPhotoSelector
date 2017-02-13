@@ -109,8 +109,7 @@ public class PhotoHelper {
                 mDirPaths.add(folderPath);
                 //初始化PhotoFolder
                 photoFolder = new PhotoFolder();
-                photoFolder.setDir(folderPath);
-                photoFolder.setFirstPhotoPath(firstPhotoPath);
+                photoFolder.setPath(folderPath);
                 photoFolder.setName(getNameFromPath(folderPath));
             }
             //忽略某些奇怪的图片
@@ -118,9 +117,11 @@ public class PhotoHelper {
                 continue;
             }
             //获取该文件夹下，所有图片的数量
-            int picSize = PhotoUtil.getPhotoCountFromFolder(parentFile);
+            List<String> photos = PhotoUtil.getPhotoNames(parentFile);
+            int picSize = photos.size();
             totalCount+=picSize;
             photoFolder.setCount(picSize);
+            photoFolder.setPhotos(photos);
             photoFolders.add(photoFolder);
             //获取图片数量最多的文件和该文件夹下的图片数量
             if(picSize>mPicsSize){
@@ -129,6 +130,8 @@ public class PhotoHelper {
                 //当前选中的文件夹
                 currentFolder = photoFolder;
             }
+            //一个文件夹遍历完成后，清除变量
+            firstPhotoPath = null;
         }
         //扫描完成，关闭资源
         mCursor.close();

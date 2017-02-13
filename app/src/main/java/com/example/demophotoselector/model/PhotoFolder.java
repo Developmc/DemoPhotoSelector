@@ -1,5 +1,7 @@
 package com.example.demophotoselector.model;
 
+import java.util.List;
+
 /**文件夹实体类
  * Created by clement on 17/2/10.
  */
@@ -8,11 +10,7 @@ public class PhotoFolder {
     /**
      * 文件夹路径
      */
-    private String dir;
-    /**
-     * 第一张照片的路径
-     */
-    private String firstPhotoPath;
+    private String path;
     /**
      * 文件夹名
      */
@@ -21,21 +19,25 @@ public class PhotoFolder {
      * 文件夹下图片的数量
      */
     private int count;
+    /**
+     * 文件夹下图片的列表
+     */
+    private List<String> photos;
 
-    public String getDir() {
-        return dir;
+    public String getPath() {
+        return path;
     }
 
-    public void setDir(String dir) {
-        this.dir = dir;
+    public void setPath(String path) {
+        this.path = path;
     }
 
-    public String getFirstPhotoPath() {
-        return firstPhotoPath;
+    public List<String> getPhotos() {
+        return photos;
     }
 
-    public void setFirstPhotoPath(String firstPhotoPath) {
-        this.firstPhotoPath = firstPhotoPath;
+    public void setPhotos(List<String> photos) {
+        this.photos = photos;
     }
 
     public String getName() {

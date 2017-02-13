@@ -4,6 +4,6 @@ package com.example.demophotoselector.listener;
  * Created by developmc on 17/2/12.
  */
 
-public interface OnItemSelectListener {
+public interface OnItemViewSelectListener {
     void onItemSelect(int position,boolean isSelected);
 }
