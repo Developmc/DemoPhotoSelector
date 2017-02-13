@@ -12,7 +12,7 @@ import android.widget.ImageView;
 import com.bumptech.glide.Glide;
 import com.example.demophotoselector.R;
 import com.example.demophotoselector.listener.OnItemViewClickListener;
-import com.example.demophotoselector.listener.OnItemViewSelectListener;
+import com.example.demophotoselector.listener.OnSelectedListener;
 import com.example.demophotoselector.model.Photo;
 import com.example.demophotoselector.util.PhotoUtil;
 
@@ -30,7 +30,7 @@ public class PhotoAdapter extends RecyclerView.Adapter<PhotoAdapter.PhotoViewHol
     private List<Photo> photos;
     //记录当前已经被选择的照片
     private List<Photo> selectedPhotos;
-    private OnItemViewSelectListener onItemSelectListener;
+    private OnSelectedListener onSelectedListener;
     private OnItemViewClickListener onItemViewClickListener;
     public PhotoAdapter(Context context,List<Photo> photos,List<Photo> selectedPhotos){
         this.mContext = context;
@@ -68,8 +68,8 @@ public class PhotoAdapter extends RecyclerView.Adapter<PhotoAdapter.PhotoViewHol
                 //更新已选择的图片列表
                 updateSelectedPhotos(photo,selectedPhotos);
                 //通知外界
-                if(onItemSelectListener!=null){
-                    onItemSelectListener.onItemSelect(holder.getAdapterPosition(),true);
+                if(onSelectedListener!=null){
+                    onSelectedListener.onSelectedPhotoUpdate(selectedPhotos);
                 }
             }
         });
@@ -147,7 +147,7 @@ public class PhotoAdapter extends RecyclerView.Adapter<PhotoAdapter.PhotoViewHol
         }
         //如果是取消"勾选"
         for(Photo tempPhoto:selectedPhotos){
-            if(photo.getPath().equals(tempPhoto)){
+            if(photo.getPath().equals(tempPhoto.getPath())){
                 selectedPhotos.remove(tempPhoto);
                 break;
             }
@@ -169,8 +169,8 @@ public class PhotoAdapter extends RecyclerView.Adapter<PhotoAdapter.PhotoViewHol
         }
     }
 
-    public void setOnItemSelectListener(OnItemViewSelectListener onItemSelectListener) {
-        this.onItemSelectListener = onItemSelectListener;
+    public void setOnSelectedListener(OnSelectedListener onSelectedListener) {
+        this.onSelectedListener = onSelectedListener;
     }
 
     public void setOnItemViewClickListener(OnItemViewClickListener onItemViewClickListener) {

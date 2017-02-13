@@ -17,6 +17,7 @@ import android.widget.Toast;
 
 import com.example.demophotoselector.constant.MessageConstant;
 import com.example.demophotoselector.listener.OnItemViewClickListener;
+import com.example.demophotoselector.listener.OnSelectedListener;
 import com.example.demophotoselector.model.Photo;
 import com.example.demophotoselector.recycler.DragCallBack;
 import com.example.demophotoselector.recycler.FolderAdapter;
@@ -42,6 +43,10 @@ public class PhotoSelectActivity extends AppCompatActivity {
     ImageView iv_back;
     @BindView(R.id.tv_folder)
     TextView tv_folder;
+    @BindView(R.id.tv_num)
+    TextView tv_num;
+    @BindView(R.id.tv_preview)
+    TextView tv_preview;
     private PhotoAdapter adapter;
     private PhotoThread photoThread;
     private PhotoHelper photoHelper;
@@ -66,6 +71,21 @@ public class PhotoSelectActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(layoutManager);
         adapter = new PhotoAdapter(this,new ArrayList<Photo>(),selectedPhotos);
         recyclerView.setAdapter(adapter);
+        //监听选中图片更新事件
+        adapter.setOnSelectedListener(new OnSelectedListener() {
+            @Override
+            public void onSelectedPhotoUpdate(List<Photo> selectedPhotos) {
+                if(selectedPhotos!=null && !selectedPhotos.isEmpty()){
+                    tv_preview.setVisibility(View.VISIBLE);
+                    tv_num.setVisibility(View.VISIBLE);
+                    tv_num.setText(String.valueOf(selectedPhotos.size()));
+                }
+                else{
+                    tv_preview.setVisibility(View.INVISIBLE);
+                    tv_num.setVisibility(View.INVISIBLE);
+                }
+            }
+        });
         //支持拖拽
         DragCallBack callBack = new DragCallBack(this,adapter);
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(callBack);

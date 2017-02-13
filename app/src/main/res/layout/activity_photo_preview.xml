@@ -46,14 +46,29 @@
             android:drawableRight="@drawable/ic_more"
             android:drawableEnd="@drawable/ic_more"
             tools:text="@string/app_name"/>
+
+        <TextView
+            android:id="@+id/tv_preview"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:textColor="@color/white"
+            android:text="@string/preview"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:visibility="invisible" />
+
         <TextView
             android:id="@+id/tv_num"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true"
+            android:layout_toLeftOf="@+id/tv_preview"
+            android:layout_toStartOf="@+id/tv_preview"
+            android:layout_marginRight="8dp"
+            android:layout_marginEnd="8dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="4"
             android:textColor="@color/white"
-            android:background="@drawable/shape_circular"/>
+            android:background="@drawable/shape_circular"
+            android:visibility="invisible"
+            tools:text="4"/>
     </RelativeLayout>
 </android.support.design.widget.CoordinatorLayout>
