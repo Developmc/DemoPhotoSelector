@@ -1,5 +1,7 @@
-package com.example.demophotoselector;
+package com.example.demophotoselector.activity;
 
+import android.content.Intent;
+import android.graphics.Rect;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -15,6 +17,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.demophotoselector.PhotoHelper;
+import com.example.demophotoselector.R;
 import com.example.demophotoselector.constant.MessageConstant;
 import com.example.demophotoselector.listener.OnItemViewClickListener;
 import com.example.demophotoselector.listener.OnSelectedListener;
@@ -55,10 +59,11 @@ public class PhotoSelectActivity extends AppCompatActivity {
     //记录当前已经被选择的照片
     private List<Photo> selectedPhotos = new ArrayList<>();
     private BottomSheetDialogEx folderDialog ;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_photo_preview);
+        setContentView(R.layout.activity_photo_select);
         ButterKnife.bind(this);
         initRecyclerView();
         start2LoadPhotos();
@@ -84,6 +89,23 @@ public class PhotoSelectActivity extends AppCompatActivity {
                     tv_preview.setVisibility(View.INVISIBLE);
                     tv_num.setVisibility(View.INVISIBLE);
                 }
+            }
+        });
+        //监听图片被点击事件
+        adapter.setOnItemViewClickListener(new OnItemViewClickListener() {
+            @Override
+            public void onItemViewClick(View itemView, int position) {
+                ImageView imageView = (ImageView) itemView.findViewById(R.id.iv_icon);
+
+                Intent intent = new Intent(PhotoSelectActivity.this, PhotoPreviewActivity.class);
+                Rect rect = new Rect();
+                imageView.getGlobalVisibleRect(rect);
+                intent.putExtra(PhotoPreviewActivity.IMAGE_ORIGIN_RECT, rect);
+                intent.putExtra(PhotoPreviewActivity.IMAGE_SCALE_TYPE, imageView.getScaleType());
+                intent.putExtra(PhotoPreviewActivity.IMAGE_RES_ID, adapter.getPhotos().get(position).getPath());
+                // 打开第二个界面，要屏蔽Activity的默认转场效果
+                startActivity(intent);
+                overridePendingTransition(0, 0);
             }
         });
         //支持拖拽

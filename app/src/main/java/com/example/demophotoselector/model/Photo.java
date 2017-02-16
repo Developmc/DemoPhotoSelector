@@ -23,4 +23,5 @@ public class Photo {
     public void setSelect(boolean select) {
         isSelect = select;
     }
+
 }

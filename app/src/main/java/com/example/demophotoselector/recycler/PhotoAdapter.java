@@ -73,7 +73,7 @@ public class PhotoAdapter extends RecyclerView.Adapter<PhotoAdapter.PhotoViewHol
                 }
             }
         });
-        holder.iv_icon.setOnClickListener(new View.OnClickListener() {
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if(onItemViewClickListener!=null){
@@ -155,7 +155,6 @@ public class PhotoAdapter extends RecyclerView.Adapter<PhotoAdapter.PhotoViewHol
     }
 
     class PhotoViewHolder extends RecyclerView.ViewHolder{
-        View itemView;
         @BindView(R.id.iv_icon)
         ImageView iv_icon ;
         @BindView(R.id.iv_select)
@@ -164,7 +163,6 @@ public class PhotoAdapter extends RecyclerView.Adapter<PhotoAdapter.PhotoViewHol
         View view_shadow;
         public PhotoViewHolder(final View itemView) {
             super(itemView);
-            this.itemView = itemView;
             ButterKnife.bind(this,itemView);
         }
     }
